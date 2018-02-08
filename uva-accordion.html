@@ -7,11 +7,60 @@
     <style>
       :host {
         display: block;
+        border-top: 1px solid hsl(0, 0%, 82%);
+      }
+      .Accordion-trigger {
+          background: none;
+          border: 0;
+          color: hsl(0, 0%, 13%);
+          display: block;
+          font-size: 1rem;
+          font-weight: normal;
+          margin: 0;
+          padding: 1em 1.5em;
+          position: relative;
+          text-align: left;
+          width: 100%;
+      }
+      .Accordion-trigger:focus,
+      .Accordion-trigger:hover {
+        background: hsl(0, 0%, 93%);
+      }
+      .Accordion-title {
+        display: block; /* For Edge bug https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/8295099/ */
+        pointer-events: none;
+      }
+      .Accordion-icon {
+        border: solid hsl(0, 0%, 62%);
+        border-width: 0 2px 2px 0;
+        height: .5rem;
+        pointer-events: none;
+        position: absolute;
+        right: 1.5em;
+        top: 50%;
+        transform: translateY(-60%) rotate(45deg);
+        width: .5rem;
+      }
+      .Accordion-trigger:focus .Accordion-icon,
+      .Accordion-trigger:hover .Accordion-icon {
+        border-color: hsl(0, 0%, 13%);
+      }
+      .Accordion-trigger[aria-expanded] .Accordion-icon {
+        transform: translateY(-50%) rotate(-135deg);
+      }
+      .Accordion-panel {
+        margin: 0;
+        padding: 1em 1.5em;
+      }
+      /* For Edge bug https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/4806035/ */
+      .Accordion-panel[hidden] {
+        display: none;
       }
     </style>
     <dt role="heading" aria-level$="[[headingLevel]]">
       <button id="accordionId" aria-expanded$="{{opened}}" class="Accordion-trigger" aria-controls="bodysect" type="button" on-click="toggle">
         <span class="Accordion-title"><slot name="heading"></slot></span>
+        <span class="Accordion-icon"></span>
       </button>
     </dt>
     <iron-collapse id="collapse" opened$="{{opened}}">
@@ -57,9 +106,14 @@
       :host {
         display: block;
       }
+      .Accordion {
+        border: 1px solid hsl(0, 0%, 82%);
+        border-radius: .3em;
+        box-shadow: 0 1px 2px hsl(0, 0%, 82%);
+      }
     </style>
     <dl id="accordionGroup" role="presentation" class="Accordion">
-      <iron-selector selected-attribute="opened">
+      <iron-selector multi="[[multi]]" selected-attribute="opened">
         <slot></slot>
       </iron-selector>
     </dl>
@@ -80,7 +134,7 @@
         return {
           /** If true, multiple selections are allowed **/
           multi: {
-            type: boolean:
+            type: Boolean,
             value: false
           }
         };
