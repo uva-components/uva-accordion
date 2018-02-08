@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
 
 <dom-module id="uva-accordion-item">
   <template>
@@ -42,7 +43,7 @@
         };
       }
       toggle() {
-        this.$.collapse.toggle();
+        //this.$.collapse.toggle();
       }
     }
 
@@ -58,7 +59,9 @@
       }
     </style>
     <dl id="accordionGroup" role="presentation" class="Accordion">
-      <slot></slot>
+      <iron-selector selected-attribute="opened">
+        <slot></slot>
+      </iron-selector>
     </dl>
   </template>
 
@@ -75,7 +78,11 @@
       static get is() { return 'uva-accordion'; }
       static get properties() {
         return {
-
+          /** If true, multiple selections are allowed **/
+          multi: {
+            type: boolean:
+            value: false
+          }
         };
       }
     }
