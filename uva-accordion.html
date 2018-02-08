@@ -8,9 +8,15 @@
         display: block;
       }
     </style>
-    <dt on-click="toggle"><slot name="heading"></slot></dt>
+    <dt role="heading" aria-level$="[[headingLevel]]">
+      <button id="accordionId" aria-expanded$="{{opened}}" class="Accordion-trigger" aria-controls="bodysect" type="button" on-click="toggle">
+        <span class="Accordion-title"><slot name="heading"></slot></span>
+      </button>
+    </dt>
     <iron-collapse id="collapse" opened$="{{opened}}">
-      <dd><slot name="body"></slot></dd>
+      <dd id="bodysect" role="region" aria-labelledby="accordionId" class="Accordion-panel">
+        <div><slot name="body"></slot></div>
+      </dd>
     </iron-collapse>
   </template>
 
@@ -27,7 +33,12 @@
       static get is() { return 'uva-accordion-item'; }
       static get properties() {
         return {
-          opened: Boolean
+          opened: Boolean,
+          /** The heading level assigned to the items heading **/
+          headingLevel: {
+            type: Number,
+            value: 3
+          }
         };
       }
       toggle() {
