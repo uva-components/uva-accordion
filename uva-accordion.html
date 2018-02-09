@@ -22,14 +22,20 @@
           position: relative;
           text-align: left;
           width: 100%;
+          @apply --uva-accordion-item-trigger;
       }
-      .Accordion-trigger:focus,
+      .Accordion-trigger:focus {
+        background: hsl(0, 0%, 93%);
+        @apply --uva-accordion-item-trigger-focus;
+      }
       .Accordion-trigger:hover {
         background: hsl(0, 0%, 93%);
+        @apply --uva-accordion-item-trigger-hover;
       }
       .Accordion-title {
         display: block; /* For Edge bug https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/8295099/ */
         pointer-events: none;
+        @apply --uva-accordion-item-title;
       }
       .Accordion-icon {
         border: solid hsl(0, 0%, 62%);
@@ -41,17 +47,24 @@
         top: 50%;
         transform: translateY(-60%) rotate(45deg);
         width: .5rem;
+        @apply --uva-accordion-item-icon;
       }
-      .Accordion-trigger:focus .Accordion-icon,
+      .Accordion-trigger:focus .Accordion-icon {
+        border-color: hsl(0, 0%, 13%);
+        @apply --uva-accordion-item-icon-focus;
+      }
       .Accordion-trigger:hover .Accordion-icon {
         border-color: hsl(0, 0%, 13%);
+        @apply --uva-accordion-item-icon-hover;
       }
       .Accordion-trigger[aria-expanded] .Accordion-icon {
         transform: translateY(-50%) rotate(-135deg);
+        @apply --uva-accordion-item-icon-opened;
       }
       .Accordion-panel {
         margin: 0;
         padding: 1em 1.5em;
+        @apply --uva-accordion-item-panel;
       }
       /* For Edge bug https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/4806035/ */
       .Accordion-panel[hidden] {
@@ -79,6 +92,7 @@
      * @customElement
      * @polymer
      * @demo demo/index.html
+     * @demo demo/card.html Card Usage
      */
     class UvaAccordionItem extends Polymer.Element {
       static get is() { return 'uva-accordion-item'; }
@@ -129,6 +143,9 @@
         border-radius: .3em;
         box-shadow: 0 1px 2px hsl(0, 0%, 82%);
       }
+      dl {
+        @apply --uva-accordion-dl;
+      }
     </style>
     <dl id="accordionGroup" role="presentation" class="Accordion">
       <iron-selector id="selector" multi="[[multi]]" selected-attribute="opened" selected-item="{{_selectedItem}}" items="{{_items}}">
@@ -145,6 +162,7 @@
      * @customElement
      * @polymer
      * @demo demo/index.html
+     * @demo demo/card.html Card Usage
      */
     class UvaAccordion extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior], Polymer.Element) {
       static get is() { return 'uva-accordion'; }
@@ -160,11 +178,6 @@
             type: Object,
             observer: '_selectedItemChanged'
           },
-//          tabindex: {
-//            type: String,
-//            value: '0',
-//            reflectToAttribute: true
-//          },
           _items: {
             type: Array,
             observer: '_activate',
@@ -181,32 +194,12 @@
           'home': 'selectFirst'
         };
       }
-      ready() {
-        super.ready();
-//        this.addEventListener('focus', function(e){this._handleFocus(e)}.bind(this));
-//        this.addEventListener('blur', e => {this._handleBlur(e)});
-      }
       _activate() {
         // Iron-selector doesn't init the selected state by attribute so we must do it :(
         this._items.forEach(function(item,index){
           if(item.hasAttribute('opened'))this.$.selector.selectIndex(index)
         }.bind(this));
       }
-      _handleFocus(e) {
-//        if(this.$.selector.items && this.$.selector.items.length>0) {
-//                  // focus the currently selected item if we have one
-//                  if(this._selectedItem) { this._selectedItem.focus(); }
-//                  // or select the first closed item
-//                  else {this.$.selector.items[0].focus();}
-//                  // set tabindex to -1 so we skip tabbing here in reverse
-//                  this.tabindex = -1;
-//                }
-      }
-      _handleBlur(e) {
-        console.log('blur');
-//        this.tabindex = 0;
-      }
-
       selectNext(e) {
         e.preventDefault();
         this.$.selector.selectNext();
