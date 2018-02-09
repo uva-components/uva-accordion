@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-collapse/iron-collapse.html">
 <link rel="import" href="../iron-selector/iron-selector.html">
+<link rel="import" href="../iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
 
 <dom-module id="uva-accordion-item">
   <template>
@@ -58,7 +59,7 @@
       }
     </style>
     <dt role="heading" aria-level$="[[headingLevel]]">
-      <button id="accordionId" aria-expanded$="{{opened}}" class="Accordion-trigger" aria-controls="bodysect" type="button" on-click="toggle">
+      <button tabindex="0" id="accordionId" aria-expanded$="{{opened}}" class="Accordion-trigger" aria-controls="bodysect" type="button">
         <span class="Accordion-title"><slot name="heading"></slot></span>
         <span class="Accordion-icon"></span>
       </button>
@@ -83,16 +84,33 @@
       static get is() { return 'uva-accordion-item'; }
       static get properties() {
         return {
-          opened: Boolean,
+          opened: {
+            type: Boolean,
+            notify: true,
+            value: false
+          },
           /** The heading level assigned to the items heading **/
           headingLevel: {
             type: Number,
             value: 3
+          },
+            tabindex: {
+            type: String,
+//            value: "-1",
+            value: '0',
+            reflectToAttribute: true
           }
         };
       }
-      toggle() {
-        //this.$.collapse.toggle();
+      ready() {
+        super.ready();
+        this.addEventListener('focus', function(e){this._handleFocus(e)}.bind(this));
+//        this.addEventListener('blur', e => {this._handleBlur(e)});
+      }
+      _handleFocus(e) {
+        if(this.$.accordionId) { this.$.accordionId.focus(); }
+//        // set tabindex to -1 so we skip tabbing here in reverse
+//        this.tabindex = -1;
       }
     }
 
@@ -113,7 +131,7 @@
       }
     </style>
     <dl id="accordionGroup" role="presentation" class="Accordion">
-      <iron-selector multi="[[multi]]" selected-attribute="opened">
+      <iron-selector id="selector" multi="[[multi]]" selected-attribute="opened" selected-item="{{_selectedItem}}" items="{{_items}}">
         <slot></slot>
       </iron-selector>
     </dl>
@@ -128,7 +146,7 @@
      * @polymer
      * @demo demo/index.html
      */
-    class UvaAccordion extends Polymer.Element {
+    class UvaAccordion extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior], Polymer.Element) {
       static get is() { return 'uva-accordion'; }
       static get properties() {
         return {
@@ -136,8 +154,86 @@
           multi: {
             type: Boolean,
             value: false
+          },
+          /** the currently selected accordion node */
+          _selectedItem: {
+            type: Object,
+            observer: '_selectedItemChanged'
+          },
+//          tabindex: {
+//            type: String,
+//            value: '0',
+//            reflectToAttribute: true
+//          },
+          _items: {
+            type: Array,
+            observer: '_activate',
           }
         };
+      }
+      get keyBindings() {
+        return {
+          'ctrl+pagedown': 'selectNext',
+          'down': 'selectNext',
+          'ctrl+pageup': 'selectPrevious',
+          'up': 'selectPrevious',
+          'end': 'selectLast',
+          'home': 'selectFirst'
+        };
+      }
+      ready() {
+        super.ready();
+//        this.addEventListener('focus', function(e){this._handleFocus(e)}.bind(this));
+//        this.addEventListener('blur', e => {this._handleBlur(e)});
+      }
+      _activate() {
+        // Iron-selector doesn't init the selected state by attribute so we must do it :(
+        this._items.forEach(function(item,index){
+          if(item.hasAttribute('opened'))this.$.selector.selectIndex(index)
+        }.bind(this));
+      }
+      _handleFocus(e) {
+//        if(this.$.selector.items && this.$.selector.items.length>0) {
+//                  // focus the currently selected item if we have one
+//                  if(this._selectedItem) { this._selectedItem.focus(); }
+//                  // or select the first closed item
+//                  else {this.$.selector.items[0].focus();}
+//                  // set tabindex to -1 so we skip tabbing here in reverse
+//                  this.tabindex = -1;
+//                }
+      }
+      _handleBlur(e) {
+        console.log('blur');
+//        this.tabindex = 0;
+      }
+
+      selectNext(e) {
+        e.preventDefault();
+        this.$.selector.selectNext();
+        if (this._selectedItem) this._selectedItem.focus();
+      }
+      selectPrevious(e) {
+        e.preventDefault();
+        this.$.selector.selectPrevious();
+        if (this._selectedItem) this._selectedItem.focus();
+      }
+      selectLast(e) {
+        e.preventDefault();
+        this.$.selector.selectIndex(this.$.selector.items.length-1);
+        if (this._selectedItem) this._selectedItem.focus();
+      }
+      selectFirst(e) {
+        e.preventDefault();
+        this.$.selector.selectIndex(0);
+        if (this._selectedItem) this._selectedItem.focus();
+      }
+      /** Set disabled state, via aria-disabled, to an expanded / active accordion which is not allowed to be toggled close (when !multi ) */
+      _selectedItemChanged(newNode, oldNode){
+        if (!this.multi && newNode) {
+          newNode.setAttribute('aria-disabled','');
+        } else if (!this.multi && oldNode) {
+          oldNode.removeAttribute('aria-disabled');
+        }
       }
     }
 
