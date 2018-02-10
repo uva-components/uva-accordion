@@ -107,24 +107,8 @@
           headingLevel: {
             type: Number,
             value: 3
-          },
-            tabindex: {
-            type: String,
-//            value: "-1",
-            value: '0',
-            reflectToAttribute: true
           }
         };
-      }
-      ready() {
-        super.ready();
-        this.addEventListener('focus', function(e){this._handleFocus(e)}.bind(this));
-//        this.addEventListener('blur', e => {this._handleBlur(e)});
-      }
-      _handleFocus(e) {
-        if(this.$.accordionId) { this.$.accordionId.focus(); }
-//        // set tabindex to -1 so we skip tabbing here in reverse
-//        this.tabindex = -1;
       }
     }
 
@@ -203,22 +187,22 @@
       selectNext(e) {
         e.preventDefault();
         this.$.selector.selectNext();
-        if (this._selectedItem) this._selectedItem.focus();
+        if (this._selectedItem) this._selectedItem.$.accordionId.focus();
       }
       selectPrevious(e) {
         e.preventDefault();
         this.$.selector.selectPrevious();
-        if (this._selectedItem) this._selectedItem.focus();
+        if (this._selectedItem) this._selectedItem.$.accordionId.focus();
       }
       selectLast(e) {
         e.preventDefault();
         this.$.selector.selectIndex(this.$.selector.items.length-1);
-        if (this._selectedItem) this._selectedItem.focus();
+        if (this._selectedItem) this._selectedItem.$.accordionId.focus();
       }
       selectFirst(e) {
         e.preventDefault();
         this.$.selector.selectIndex(0);
-        if (this._selectedItem) this._selectedItem.focus();
+        if (this._selectedItem) this._selectedItem.$.accordionId.focus();
       }
       /** Set disabled state, via aria-disabled, to an expanded / active accordion which is not allowed to be toggled close (when !multi ) */
       _selectedItemChanged(newNode, oldNode){
