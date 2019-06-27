@@ -92,7 +92,7 @@ class UvaAccordionItem extends PolymerElement {
       </dt>
       <iron-collapse id="collapse" opened$="{{opened}}">
         <dd id="bodysect" role="region" aria-labelledby="accordionId" class="Accordion-panel">
-          <div><slot name="body"></slot></div>
+          <div on-tap="_captureTap"><slot name="body"></slot></div>
         </dd>
       </iron-collapse>
     `;
@@ -110,6 +110,9 @@ class UvaAccordionItem extends PolymerElement {
         value: 3
       }
     };
+  }
+  _captureTap(e){
+    e.stopPropagation();
   }
 }
 
