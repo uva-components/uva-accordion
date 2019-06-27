@@ -33,7 +33,7 @@ class UvaAccordion extends mixinBehaviors([IronA11yKeysBehavior],PolymerElement)
         </style>
       </custom-style>
       <dl id="accordionGroup" role="presentation" class="Accordion">
-        <iron-selector id="selector" multi="[[multi]]" selected="{{_selectedIndex}}" selected-attribute="opened" selected-item="{{_selectedItem}}" items="{{_items}}">
+        <iron-selector id="selector" activate-event="[[activateEvent]]" multi="[[multi]]" selected="{{_selectedIndex}}" selected-attribute="opened" selected-item="{{_selectedItem}}" items="{{_items}}">
           <slot></slot>
         </iron-selector>
       </dl>
@@ -55,6 +55,7 @@ class UvaAccordion extends mixinBehaviors([IronA11yKeysBehavior],PolymerElement)
         type: Array,
         observer: '_activate',
       },
+      activateEvent: String
     };
   }
   get keyBindings() {
@@ -67,6 +68,13 @@ class UvaAccordion extends mixinBehaviors([IronA11yKeysBehavior],PolymerElement)
       'home': 'selectFirst'
     };
   }
+  ready(){
+    super.ready();
+    this.addEventListener('tap', (e)=>{
+      e.stopPropagation();
+    })
+  }
+
   _activate() {
     // Iron-selector doesn't init the selected state by attribute so we must do it :(
     this._items.forEach(function(item,index){
@@ -89,13 +97,13 @@ class UvaAccordion extends mixinBehaviors([IronA11yKeysBehavior],PolymerElement)
     this.$.selector.selectIndex(this.$.selector.items.length-1);
     if (this._selectedItem) this._selectedItem.$.accordionId.focus();
   }
-  /** Select and focus the first uva-accordion-item.  preventDefault method is run on an event passed as a parameter **/
+  // Select and focus the first uva-accordion-item.  preventDefault method is run on an event passed as a parameter
   selectFirst(e) {
     e.preventDefault();
     this.$.selector.selectIndex(0);
     if (this._selectedItem) this._selectedItem.$.accordionId.focus();
   }
-  /** Set disabled state, via aria-disabled, to an expanded / active accordion which is not allowed to be toggled close (when !multi ) */
+  // Set disabled state, via aria-disabled, to an expanded / active accordion which is not allowed to be toggled close (when !multi )
   _selectedItemChanged(newNode, oldNode){
     if (!this.multi && newNode) {
       newNode.setAttribute('aria-disabled','');
@@ -103,6 +111,7 @@ class UvaAccordion extends mixinBehaviors([IronA11yKeysBehavior],PolymerElement)
       oldNode.removeAttribute('aria-disabled');
     }
   }
+  
 }
 
 window.customElements.define('uva-accordion', UvaAccordion);

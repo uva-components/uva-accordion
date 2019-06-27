@@ -77,6 +77,54 @@
           </uva-accordion>
         </template>
       </demo-snippet>
+
+      <h3>Nested selection demo</h3>
+      <demo-snippet id="nested">
+        <template>
+          <uva-accordion multi>
+            <uva-accordion-item opened heading-level="2">
+              <div slot="heading">Heading 1</div>
+              <div slot="body">
+
+                <uva-accordion multi>
+                  <uva-accordion-item opened heading-level="2">
+                    <div slot="heading">Heading 1</div>
+                    <div slot="body">Some Content Here!</div>
+                  </uva-accordion-item>
+                  <uva-accordion-item heading-level="2">
+                    <div slot="heading">Heading 2</div>
+                    <div slot="body">Some Content Here!</div>
+                  </uva-accordion-item>
+                </uva-accordion>
+
+              </div>
+            </uva-accordion-item>
+            <uva-accordion-item heading-level="2">
+              <div slot="heading">Heading 2</div>
+              <div slot="body">
+
+                <uva-accordion multi >
+                  <uva-accordion-item opened heading-level="2">
+                    <div slot="heading">Heading 1</div>
+                    <div slot="body">Some Content Here!</div>
+                  </uva-accordion-item>
+                  <uva-accordion-item heading-level="2">
+                    <div slot="heading">Heading 2</div>
+                    <div slot="body">Some Content Here!</div>
+                  </uva-accordion-item>
+                </uva-accordion>
+
+              </div>
+            </uva-accordion-item>
+          </uva-accordion>
+        </template>
+      </demo-snippet>
+      <script>
+        let triggered = function(e){
+          console.log('foo');
+          e.dispatchEvent(new CustomEvent("triggered", {detail: {kicked: true}}));
+        }
+      </script>
     </div>
   </body>
 </html>
