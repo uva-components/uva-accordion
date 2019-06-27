@@ -1,4 +1,5 @@
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import {} from '@polymer/polymer/lib/elements/custom-style.js';
 import "@polymer/iron-collapse/iron-collapse.js";
 import "@polymer/iron-selector/iron-selector.js";
 import {IronA11yKeysBehavior} from "@polymer/iron-a11y-keys-behavior/iron-a11y-keys-behavior.js";
@@ -16,19 +17,21 @@ import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 class UvaAccordion extends mixinBehaviors([IronA11yKeysBehavior],PolymerElement) {
   static get template() {
     return html`
-      <style>
-      :host {
-        display: block;
-      }
-      .Accordion {
-        border: 1px solid hsl(0, 0%, 82%);
-        border-radius: .3em;
-        box-shadow: 0 1px 2px hsl(0, 0%, 82%);
-      }
-      dl {
-        @apply --uva-accordion-dl;
-      }
-      </style>
+      <custom-style>
+        <style>
+        :host {
+          display: block;
+        }
+        .Accordion {
+          border: 1px solid hsl(0, 0%, 82%);
+          border-radius: .3em;
+          box-shadow: 0 1px 2px hsl(0, 0%, 82%);
+        }
+        dl {
+          @apply --uva-accordion-dl;
+        }
+        </style>
+      </custom-style>
       <dl id="accordionGroup" role="presentation" class="Accordion">
         <iron-selector id="selector" multi="[[multi]]" selected="{{_selectedIndex}}" selected-attribute="opened" selected-item="{{_selectedItem}}" items="{{_items}}">
           <slot></slot>
