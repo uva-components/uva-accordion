@@ -82,6 +82,9 @@ class UvaAccordionItem extends PolymerElement {
           .Accordion-panel[hidden] {
             display: none;
           }
+          dt[role="heading"] {
+            @apply --uva-accordion-item-heading;
+          }
         </style>
       <custom-style>
       <dt role="heading" aria-level$="[[headingLevel]]">
@@ -90,7 +93,7 @@ class UvaAccordionItem extends PolymerElement {
           <span class="Accordion-icon"></span>
         </button>
       </dt>
-      <iron-collapse id="collapse" opened$="{{opened}}">
+      <iron-collapse id="collapse" opened$="{{opened}}" on-tap="_stopEvent">
         <dd id="bodysect" role="region" aria-labelledby="accordionId" class="Accordion-panel">
           <div on-tap="_captureTap"><slot name="body"></slot></div>
         </dd>
@@ -112,6 +115,9 @@ class UvaAccordionItem extends PolymerElement {
     };
   }
   _captureTap(e){
+    e.stopPropagation();
+  }
+  _stopEvent(e) {
     e.stopPropagation();
   }
 }
