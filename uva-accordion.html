@@ -80,7 +80,7 @@
       }
       .Accordion-panel {
         margin: 0;
-        padding: 1em 1.5em;
+        padding: var(--uva-accordion-item-panel-padding, 1em 1.5em);
         @apply --uva-accordion-item-panel;
       }
 
@@ -88,8 +88,8 @@
         display: none;
       }
       dt[role="heading"] {
+        border-bottom: var(--uva-accordion-item-heading-border-bottom);
         @apply --uva-accordion-item-heading;
-
       }
 
     </style>
