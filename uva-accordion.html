@@ -75,7 +75,7 @@
         transition: .5s ease-in-out;
       }
       :host([tree]) .Accordion-icon {
-        left: 1.5em;
+        left: 0.5em;
         transform: translateY(-60%) rotate(-45deg);
       }
       .Accordion-trigger:focus .Accordion-icon {
@@ -94,15 +94,28 @@
         transform: translateY(-50%) rotate(45deg);
         @apply --uva-accordion-item-icon-opened;
       }
+      :host([tree]) .Accordion-trigger {
+        padding: .5em;
+      }
       .Accordion-panel {
         margin: 0;
         padding: var(--uva-accordion-item-panel-padding, 1em 1.5em);
         @apply --uva-accordion-item-panel;
       }
       :host([tree]) .Accordion-panel {
-        margin-left: 4.5em;
+        margin-left: 0.5em;
       }
+      :host([tree]) .body-item {
+        display: grid;
+        grid-template-rows: auto;
 
+      }
+      :host([tree]) ::slotted(div) {
+        text-transform: capitalize;
+      }
+      :host([tree]) .body-item ::slotted(div) {
+        padding: 5px;
+      }
       .Accordion-panel[hidden] {
         display: none;
       }
@@ -120,7 +133,7 @@
     </dt>
     <iron-collapse id="collapse" opened$="{{opened}}" on-tap="_stopEvent">
       <dd id="bodysect" role="region" aria-labelledby="accordionId" class="Accordion-panel">
-        <div><slot name="body"></slot></div>
+        <div class="body-item"><slot name="body"></slot></div>
       </dd>
     </iron-collapse>
   </template>
