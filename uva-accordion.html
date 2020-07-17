@@ -9,6 +9,9 @@
       :host {
         display: block;
       }
+      [hidden] {
+        display: none;
+      }
       :host(:not([tree])) {
         border-top: 1px solid hsl(0, 0%, 82%);
       }
@@ -128,7 +131,7 @@
     <dt role="heading" aria-level$="[[headingLevel]]">
       <div role="button" tabindex="0" id="accordionId" aria-expanded$="{{opened}}" class="button Accordion-trigger" aria-controls="bodysect" type="button">
         <span class="Accordion-title"><slot name="heading"></slot></span>
-        <span class="Accordion-icon"></span>
+        <span class="Accordion-icon" hidden$="[[noIcon]]"></span>
       </div>
     </dt>
     <iron-collapse id="collapse" opened$="{{opened}}" on-tap="_stopEvent">
@@ -178,6 +181,10 @@
             value: 3
           },
           tree: {
+            type: Boolean,
+            value: false
+          },
+          noIcon: {
             type: Boolean,
             value: false
           }
