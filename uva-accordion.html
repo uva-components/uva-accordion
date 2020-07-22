@@ -131,10 +131,10 @@
     <dt role="heading" aria-level$="[[headingLevel]]">
       <div role="button" tabindex="0" id="accordionId" aria-expanded$="{{opened}}" class="button Accordion-trigger" aria-controls="bodysect" type="button">
         <span class="Accordion-title"><slot name="heading"></slot></span>
-        <span class="Accordion-icon" hidden$="[[noIcon]]"></span>
+        <span class="Accordion-icon" hidden$="[[_or(noIcon,disabled)]]"></span>
       </div>
     </dt>
-    <iron-collapse id="collapse" opened$="{{opened}}" on-tap="_stopEvent">
+    <iron-collapse id="collapse" opened$="{{_isOpened(opened,disabled)}}" on-tap="_stopEvent">
       <dd id="bodysect" role="region" aria-labelledby="accordionId" class="Accordion-panel">
         <div class="body-item"><slot name="body"></slot></div>
       </dd>
@@ -187,11 +187,22 @@
           noIcon: {
             type: Boolean,
             value: false
+          },
+          disabled: {
+            type: Boolean,
+            value: false
           }
         };
       }
+      _isOpened(opened){
+        if (this.disabled) return true;
+        else return opened;
+      }
       _stopEvent(e) {
         e.stopPropagation();
+      }
+      _or(a,b) {
+        return a || b;
       }
     }
 
@@ -215,7 +226,7 @@
       }
     </style>
     <dl id="accordionGroup" role="presentation" class="Accordion">
-      <iron-selector id="selector" multi="[[multi]]" selected="{{_selectedIndex}}" selected-attribute="opened" selected-item="{{_selectedItem}}" items="{{_items}}">
+      <iron-selector id="selector" multi="[[_or(multi,disabled)]]" selected="{{_selectedIndex}}" selected-attribute="opened" selected-item="{{_selectedItem}}" items="{{_items}}">
         <slot></slot>
       </iron-selector>
     </dl>
@@ -258,6 +269,11 @@
           _items: {
             type: Array,
             observer: '_activate',
+          },
+          disabled: {
+            type: Boolean,
+            value: false,
+            observer: '_disabledChange'
           }
         };
       }
@@ -271,12 +287,38 @@
           'home': 'selectFirst'
         };
       }
+      _or(one,two) {
+        return (one || two);
+      }
+      _disabledChange(before,after) {
+        if (this.disabled) {
+          this.selectAll();
+          this._items.forEach(function(item,index){
+            //item.noIcon=true;
+            item.disabled=true;
+          }.bind(this));
+        }
+        else if (before != null) {
+          this._items.forEach(function(item,index){
+            //item.noIcon=false;
+            item.disabled=false;
+          }.bind(this));
+        }
+      }
       _activate() {
         // Iron-selector doesn't init the selected state by attribute so we must do it :(
         this._items.forEach(function(item,index){
           if(item.hasAttribute('opened'))this.$.selector.selectIndex(index)
         }.bind(this));
+        this._disabledChange();
       }
+
+      selectAll() {
+        this._items.forEach(function(item,index){
+          item.setAttribute('opened',"");
+        }.bind(this));
+      }
+
       selectNext(e) {
         e.preventDefault();
         this.$.selector.selectNext();
