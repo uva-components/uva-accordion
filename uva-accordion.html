@@ -287,6 +287,17 @@
           'home': 'selectFirst'
         };
       }
+      connectedCallback() {
+        super.connectedCallback();
+        this._checkDisabled();
+        window.addEventListener('resize',function(e){ this._checkDisabled(); }.bind(this));
+      }
+      _checkDisabled(){
+        const disabled = getComputedStyle(this).getPropertyValue('--uva-accordion-disabled');
+        console.log("is disabled? "+disabled)
+        if (disabled && disabled.trim() != 'null' && disabled.trim() != 'false') this.disabled = true;
+        else this.disabled = false;
+      }
       _or(one,two) {
         return (one || two);
       }

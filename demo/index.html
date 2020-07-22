@@ -139,6 +139,29 @@
         </template>
       </demo-snippet>
 
+      <h3>And disabled using custom css property</h3>
+      <demo-snippet>
+        <template>
+          <style>
+            @media only screen and (min-width: 900px) {
+              .disabletest {
+                --uva-accordion-disabled: true;
+              }
+            }
+          </style>
+          <uva-accordion class="disabletest">
+            <uva-accordion-item heading-level="2">
+              <div slot="heading">Heading 1</div>
+              <div slot="body">Some Content Here!</div>
+            </uva-accordion-item>
+            <uva-accordion-item heading-level="2">
+              <div slot="heading">Heading 2</div>
+              <div slot="body">Some Content Here!</div>
+            </uva-accordion-item>
+          </uva-accordion>
+        </template>
+      </demo-snippet>
+
       <h3>or items disabled</h3>
       <demo-snippet>
         <template>
