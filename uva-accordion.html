@@ -15,6 +15,9 @@
       :host(:not([tree])) {
         border-top: 1px solid hsl(0, 0%, 82%);
       }
+      .button[disabled] {
+        cursor:default;
+      }
       .button {
         display:inline-block;
         color:#444;
@@ -129,7 +132,7 @@
 
     </style>
     <dt role="heading" aria-level$="[[headingLevel]]">
-      <div role="button" tabindex="0" id="accordionId" aria-expanded$="{{opened}}" class="button Accordion-trigger" aria-controls="bodysect" type="button">
+      <div role="button" disabled$="[[disabled]]" tabindex="0" id="accordionId" aria-expanded$="{{opened}}" class="button Accordion-trigger" aria-controls="bodysect" type="button">
         <span class="Accordion-title"><slot name="heading"></slot></span>
         <span class="Accordion-icon" hidden$="[[_or(noIcon,disabled)]]"></span>
       </div>
@@ -295,7 +298,7 @@
       _checkDisabled(){
         const disabled = getComputedStyle(this).getPropertyValue('--uva-accordion-disabled');
         console.log("is disabled? "+disabled)
-        if (disabled && disabled.trim() != 'null' && disabled.trim() != 'false') this.disabled = true;
+        if (this.disabled || (disabled && disabled.trim() != 'null' && disabled.trim() != 'false') ) this.disabled = true;
         else this.disabled = false;
       }
       _or(one,two) {
