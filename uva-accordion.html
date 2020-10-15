@@ -169,7 +169,7 @@
      * @demo demo/index.html
      * @demo demo/card.html Card Usage
      */
-    class UvaAccordionItem extends Polymer.Element {
+    class UvaAccordionItem extends Polymer.mixinBehaviors([Polymer.IronA11yKeysBehavior], Polymer.Element) {
       static get is() { return 'uva-accordion-item'; }
       static get properties() {
         return {
@@ -197,6 +197,12 @@
           }
         };
       }
+      get keyBindings() {
+        return {
+          'enter:keypress': 'toggle',
+          'space': 'toggle',
+        };
+      }
       _isOpened(opened){
         if (this.disabled) return true;
         else return opened;
@@ -206,6 +212,12 @@
       }
       _or(a,b) {
         return a || b;
+      }
+      toggle(e) {
+        this._stopEvent(e);
+        e.preventDefault();
+        if (!this.disabled) this.$.collapse.toggle();
+        console.log("pressed");
       }
     }
 
@@ -290,6 +302,7 @@
           'home': 'selectFirst'
         };
       }
+
       connectedCallback() {
         super.connectedCallback();
         this._checkDisabled();
